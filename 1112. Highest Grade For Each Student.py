@@ -1,4 +1,5 @@
 # 1112. Highest Grade For Each Student
+# Similar to 184. Department Highest Salary*********
 # Medium
 
 # 126
@@ -59,5 +60,19 @@ select student_id, max(grade) as max_grade
 from Enrollments
 group by student_id
 ) 
+group by e.student_id
+order by e.student_id
+
+
+# S2
+# Write your MySQL query statement below
+
+select e.student_id, min(e.course_id) as course_id, e.grade
+from 
+(
+select *, rank() over(partition by student_id order by grade desc) as grade_rank
+    from Enrollments
+) e
+where e.grade_rank = 1
 group by e.student_id
 order by e.student_id
