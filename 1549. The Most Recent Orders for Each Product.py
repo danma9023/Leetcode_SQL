@@ -106,7 +106,7 @@
 # screen's most recent order is in 2020-08-29, it was ordered only once this day.
 # The hard disk was never ordered and we don't include it in the result table.
 
-# Solution 
+# Solution 1
 
 # Write your MySQL query statement below
 select p.product_name as product_name, t.product_id, t.order_id, t.order_date
@@ -118,3 +118,20 @@ from Orders ) t
 on p.product_id = t.product_id
 where t.order_rank  =1
 order by product_name asc, t.product_id asc, t.order_id asc
+
+# Solution 2
+SELECT p.product_name
+      ,r.product_id
+      ,o2.order_id
+      ,o2.order_date
+FROM (
+    SELECT o.product_id, MAX(o.order_date) AS 'max_date'
+    FROM Orders o
+    GROUP BY o.product_id
+    ) r
+JOIN Orders o2
+ON o2.product_id = r.product_id
+AND o2.order_date = r.max_date
+LEFT JOIN Products p
+ON r.product_id = p.product_id
+ORDER BY product_name ASC, product_id ASC, order_id ASC
